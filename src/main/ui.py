@@ -3,7 +3,7 @@ from dash import Dash, html, dcc
 from const import SHOP_LOGO
 
 
-app = Dash(external_stylesheets=[dbc.themes.FLATLY])
+app = Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
 
 # store_dropdown_options = [{'label': str(val), 'value': val} for val in store_names_df['name'].unique()]
 # store_dropdown_menu = dcc.Dropdown(
