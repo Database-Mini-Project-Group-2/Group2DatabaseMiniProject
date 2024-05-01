@@ -18,7 +18,7 @@ def generate_selling_products_chart(names):
     Input("store-dropdown-menu", "value"),
 )
 def on_form_change(store_value):
-    return f"The selected store to display information is : [{store_value}]."
+    return f"Display information for this store: {store_value}."
 
 
 if __name__ == '__main__':
