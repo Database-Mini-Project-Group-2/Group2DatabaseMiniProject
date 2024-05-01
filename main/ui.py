@@ -1,15 +1,9 @@
 import dash_bootstrap_components as dbc
 from dash import Dash, html, dcc
-from const import SHOP_LOGO
 
+from backend import store_names_df
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
-
-# store_dropdown_options = [{'label': str(val), 'value': val} for val in store_names_df['name'].unique()]
-# store_dropdown_menu = dcc.Dropdown(
-#     children=store_dropdown_options,
-#     id='store-dropdown-options',
-# )
 
 navbar = dbc.Navbar(
     dbc.Container(
@@ -18,8 +12,8 @@ navbar = dbc.Navbar(
                 # Use row and col to control vertical alignment of logo / brand
                 dbc.Row(
                     [
-                        dbc.Col(html.Img(src=SHOP_LOGO, height="30px")),
-                        dbc.Col(dbc.NavbarBrand("Marigold", className="ms-2")),
+                        dbc.Col(html.Img(src=app.get_asset_url('bike_logo.png'), height="48px")),
+                        dbc.Col(dbc.NavbarBrand("Marigold", className="ms-1")),
                     ],
                     align="center",
                     className="g-0",
@@ -27,7 +21,15 @@ navbar = dbc.Navbar(
                 href="/",
                 style={"textDecoration": "none"},
             ),
-            # store_dropdown_menu
+            # Dropdown menu
+            html.Div(
+                dbc.Select(
+                    store_names_df['name'],
+                    store_names_df['name'][0],
+                    id="store-dropdown-menu",
+                ),
+                className="py-2",
+            ),
         ]
     ),
     color="dark",
@@ -64,8 +66,8 @@ app.layout = html.Div([
             dbc.Col([
                 dbc.Card([
                     dbc.CardHeader(dbc.CardBody([
-                        html.H2("Total Sales", className="total-sales"),
-                        html.H3("R10123.15", className="total-amount"),
+                        html.H2("Shop Name", className="total-sales2"),
+                        html.H4("Name", id="shop-name-display"),
                     ])),
                 ])
             ]),
@@ -87,4 +89,3 @@ app.layout = html.Div([
         ], width="auto")
     ),
 ])
-

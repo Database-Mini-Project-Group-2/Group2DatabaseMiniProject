@@ -1,13 +1,29 @@
 import pandas as pd
+import pypyodbc as odbc
+from sqlalchemy import create_engine, URL
 
-from connection import engine as conn
+# Connection -----------------------------------------------------------------------------
+# Local SQL Server for AdventureWorks2016 Database
+MOKGETHWA_SERVER_NAME = 'MOKGETHWA'
+SAM_SERVER_NAME = 'SAM-PC\\SQLEXPRESS'
+
+connection_string = f"""
+    Driver={{SQL Server}};
+    Server={SAM_SERVER_NAME};
+    Database=AdventureWorks2016;
+    Trusted_Connection=yes;
+"""
+connection_url = URL.create("mssql+pyodbc", query={"odbc_connect": connection_string})
+engine = create_engine(connection_url, module=odbc)
+# ----------------------------------------------------------------------------------------
+
 
 sql_statement = """
     SELECT sr.Name FROM Sales.SalesOrderHeader soh
     JOIN Sales.SalesOrderHeaderSalesReason sohsr ON soh.SalesOrderID = sohsr.SalesOrderID
     JOIN Sales.SalesReason sr ON sohsr.SalesReasonID = sr.SalesReasonID 
 """
-df = pd.read_sql_query(sql_statement, conn)
+df = pd.read_sql_query(sql_statement, engine)
 
 sql_sales = """
     SELECT soh.OrderDate, COUNT(*) total
@@ -21,7 +37,7 @@ sql_sales = """
     GROUP BY soh.OrderDate
     ORDER BY OrderDate ASC
 """
-sales_df = pd.read_sql_query(sql_sales, conn)
+sales_df = pd.read_sql_query(sql_sales, engine)
 
 sales_person = """
     SELECT p.LastName, p.FirstName, sp.SalesLastYear, sp.SalesYTD
@@ -30,10 +46,9 @@ sales_person = """
     JOIN Person.Person p ON e.BusinessEntityID = p.BusinessEntityID
     ORDER BY SalesLastYear DESC
 """
-sales_person_df = pd.read_sql_query(sales_person, conn)
+sales_person_df = pd.read_sql_query(sales_person, engine)
 
 store_names = """
     SELECT distinct Name FROM Sales.Store
 """
-store_names_df = pd.read_sql_query(store_names, conn)
-# store_dropdown_options = [{'label': str(val), 'value': val} for val in store_names_df['name'].unique()]
+store_names_df = pd.read_sql_query(store_names, engine)

@@ -13,5 +13,13 @@ def generate_selling_products_chart(names):
     return fig
 
 
+@callback(
+    Output("shop-name-display", "children"),
+    Input("store-dropdown-menu", "value"),
+)
+def on_form_change(store_value):
+    return f"The selected store to display information is : [{store_value}]."
+
+
 if __name__ == '__main__':
     app.run_server(debug=True)
