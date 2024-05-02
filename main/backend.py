@@ -25,6 +25,7 @@ sql_statement = """
 """
 df = pd.read_sql_query(sql_statement, engine)
 
+
 sql_sales = """
     SELECT soh.OrderDate, COUNT(*) total
     FROM Sales.SalesOrderHeader soh 
@@ -39,6 +40,7 @@ sql_sales = """
 """
 sales_df = pd.read_sql_query(sql_sales, engine)
 
+
 sales_person = """
     SELECT p.LastName, p.FirstName, sp.SalesLastYear, sp.SalesYTD
     FROM Sales.SalesPerson sp 
@@ -48,7 +50,15 @@ sales_person = """
 """
 sales_person_df = pd.read_sql_query(sales_person, engine)
 
+
 store_names = """
-    SELECT distinct Name FROM Sales.Store
+    SELECT DISTINCT Name FROM Sales.Store
 """
 store_names_df = pd.read_sql_query(store_names, engine)
+
+
+store_table_df = pd.DataFrame(
+    {
+        "product Name": ["Dent", "Prefect", "Beeblebrox", "Astra"],
+    }
+)

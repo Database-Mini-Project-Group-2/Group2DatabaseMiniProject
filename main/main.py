@@ -1,7 +1,11 @@
 import dash_bootstrap_components as dbc
 from dash import Dash, html, dcc, Output, Input, callback
 from home_ui import home_content
+from backend import store_table_df
+from products_ui import products_content
+from store_ui import store_content
 import plotly.express as px
+import plotly.graph_objects as go
 
 app = Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
 app.config.suppress_callback_exceptions = True
@@ -12,7 +16,7 @@ sidebar = html.Div(
             dbc.Row(
                 [
                     dbc.Col(html.Img(src=app.get_asset_url('bike_logo.png'), height="92px", width='auto')),
-                    dbc.Col(html.H2("Marigold", className="ms-1")),
+                    dbc.Col(html.H1("Marigold", className="ms-1")),
                 ],
                 align="start",
                 className="g-0",
@@ -24,8 +28,8 @@ sidebar = html.Div(
         dbc.Nav(
             [
                 dbc.NavLink("Dashboard", href="/", active="exact"),
-                dbc.NavLink("Shop Dashboard", href="/shop_ui", active="exact"),
-                dbc.NavLink("Products per Shop", href="/products", active="exact"),
+                dbc.NavLink("Store Information", href="/store_info", active="exact"),
+                dbc.NavLink("Products", href="/products", active="exact"),
             ],
             vertical=True,
             pills=True,
@@ -54,10 +58,10 @@ app.layout = html.Div([
 def render_page_content(pathname):
     if pathname == "/":
         return home_content
-    elif pathname == "/shop_ui":
-        return html.P("This is the dashboard per shop.")
+    elif pathname == "/store_info":
+        return store_content
     elif pathname == "/products":
-        return html.P("This is page will shop all the products with it pictures.")
+        return products_content
     # If the user tries to reach a different page, return a 404 message
     return html.Div(
         [
@@ -79,11 +83,37 @@ def generate_selling_products_chart(names):
 
 
 @callback(
+    Output("histogram-chart", "figure"),
+    Input("names", "value"),)
+def generate_histogram_chart(names):
+    df = px.data.tips()
+    fig = px.histogram(df, x="total_bill", nbins=20)
+    return fig
+
+
+
+@callback(
+    Output("line-graph-chart", "figure"),
+    Input("names", "value"),)
+def generate_line_graph_chart(names):
+    df = px.data.stocks()
+    fig = px.line(df, x='date', y="GOOG")
+    return fig
+
+
+@callback(
+    Output("products-orders-table", "dataframe"),
+    Input("names", "value"),)
+def generate_products_table(names):
+    return store_table_df
+
+
+@callback(
     Output("shop-name-display", "children"),
     Input("store-dropdown-menu", "value"),
 )
 def on_form_change(store_value):
-    return f"Display information for this store: {store_value}."
+    return f"{store_value}."
 
 
 if __name__ == '__main__':
