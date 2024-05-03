@@ -1,9 +1,7 @@
 import dash_bootstrap_components as dbc
 from dash import Dash, html, dcc, Output, Input, callback
-from home_ui import home_content
+from ui import home_content, store_content, products_content
 from backend import store_table_df
-from products_ui import products_content
-from store_ui import store_content
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly import data
