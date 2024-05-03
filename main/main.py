@@ -6,8 +6,9 @@ from products_ui import products_content
 from store_ui import store_content
 import plotly.express as px
 import plotly.graph_objects as go
+from plotly import data
 
-app = Dash(__name__, external_stylesheets=[dbc.themes.FLATLY])
+app = Dash(__name__, external_stylesheets=[dbc.themes.VAPOR])
 app.config.suppress_callback_exceptions = True
 
 sidebar = html.Div(
@@ -42,7 +43,7 @@ sidebar = html.Div(
         "bottom": 0,
         "width": "16rem",
         "padding": "2rem 1rem",
-        "background-color": "#f8f9fa",
+        "background-color": "#f8f9fa09",
     },
 )
 
@@ -79,31 +80,60 @@ def render_page_content(pathname):
 def generate_selling_products_chart(names):
     df = px.data.tips()  # replace with your own data source
     fig = px.pie(df, values='total_bill', names=names, hole=.3)
+    fig.update_layout(template='plotly_dark',
+                      plot_bgcolor='rgba(0, 0, 0, 0)',
+                      paper_bgcolor='rgba(0, 0, 0, 0)', )
     return fig
 
 
-@callback(
-    Output("histogram-chart", "figure"),
-    Input("names", "value"),)
-def generate_histogram_chart(names):
-    df = px.data.tips()
-    fig = px.histogram(df, x="total_bill", nbins=20)
-    return fig
-
+# @callback(
+#     Output("histogram-chart", "figure"),
+#     Input("names", "value"), )
+# def generate_histogram_chart(names):
+#     df = px.data.tips()
+#     fig = px.histogram(df, x="total_bill", nbins=20)
+#     fig.update_layout(template='plotly_dark',
+#                       plot_bgcolor='rgba(0, 0, 0, 0)',
+#                       paper_bgcolor='rgba(0, 0, 0, 0)', )
+#     return fig
 
 
 @callback(
     Output("line-graph-chart", "figure"),
-    Input("names", "value"),)
+    Input("names", "value"), )
 def generate_line_graph_chart(names):
     df = px.data.stocks()
     fig = px.line(df, x='date', y="GOOG")
+    fig.update_layout(template='plotly_dark',
+                      plot_bgcolor='rgba(0, 0, 0, 0)',
+                      paper_bgcolor='rgba(0, 0, 0, 0)', )
+
+
+@callback(
+    Output("histogram-chart", "figure"),
+    Input("names", "value"), )
+def generate_bars_chart(names):
+    df = data.medals_wide()
+
+    fig = go.Figure(
+        data=[
+            go.Bar(x=df.nation, y=df.gold, name="Gold"),
+            go.Bar(x=df.nation, y=df.silver, name="Silver"),
+            go.Bar(x=df.nation, y=df.bronze, name="Bronze"),
+        ],
+        layout=dict(
+            barcornerradius=15,
+        ),
+    )
+    fig.update_layout(template='plotly_dark',
+                      plot_bgcolor='rgba(0, 0, 0, 0)',
+                      paper_bgcolor='rgba(0, 0, 0, 0)', )
     return fig
 
 
 @callback(
     Output("products-orders-table", "dataframe"),
-    Input("names", "value"),)
+    Input("names", "value"), )
 def generate_products_table(names):
     return store_table_df
 

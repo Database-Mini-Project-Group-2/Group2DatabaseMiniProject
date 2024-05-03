@@ -16,42 +16,47 @@ home_content = html.Div([
                 dcc.Dropdown(id='names',
                              options=['smoker', 'day', 'time', 'sex'],
                              value='day',
-
                              clearable=False,
                              style={'height': 'auto', 'width': '50%', 'border': '0', 'size': 'small'}),
 
                 dcc.Graph(id="selling-products-pie-chart",
-                          style={'height': 'auto', 'width': '24rem'}, ),
+                          style={'height': 'auto', 'width': '24rem', "background-color": "#0000"}, ),
             ], width='auto', ),
             dbc.Col([
                 dbc.Row([
                     dbc.Col([
                         dbc.Card([
-                            dbc.CardHeader(dbc.CardBody([
+                            dbc.CardBody([
                                 html.H5("Total Sales"),
                                 dbc.Label("R10123.50", id="total-amount", style={'height': '2.5rem'}),
-                            ]), className="border-0"),
-                        ], className="border-0")
+                            ])
+                        ], className="border-0",
+                            style={"background-color": "#f8f9fa09"})
                     ]),
                     dbc.Col([
                         dbc.Card([
-                            dbc.CardHeader(dbc.CardBody([
+                            dbc.CardBody([
                                 html.H5("Shop Name"),
                                 dbc.Label(".", id="shop-name-display", style={'height': '2.5rem'}),
-                            ]), className="border-0"),
-                        ], className="border-0")
+                            ])
+                        ], className="border-0",
+                            style={"background-color": "#f8f9fa09"})
                     ]),
                     dbc.Col([
                         dbc.Card([
-                            dbc.CardHeader(dbc.CardBody([
+                            dbc.CardBody([
                                 html.H5("Total Sales"),
                                 dbc.Label("R10123.15", id="total-amount", style={'height': '2.5rem'}),
-                            ]), className="border-0"),
-                        ], className="border-0")
+                            ])
+                        ], className="border-0",
+                            style={"background-color": "#f8f9fa09"})
                     ]),
                 ], className="g-1", ),
-                dbc.Row(dcc.Graph(id='histogram-chart', style={'height': '20rem', 'width': '42rem'}, ))
+                dbc.Row(dcc.Graph(id='histogram-chart',
+                                  style={'height': '20rem', 'width': '42rem', }, )),
+
             ], className="g-1", )
         ]
     ),
+    # dbc.Row(dcc.Graph(id='bars-chart', style={'height': '20rem', 'width': '42rem', }, )),
 ])
